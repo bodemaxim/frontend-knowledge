@@ -59,7 +59,6 @@ const initData = async () => {
  */
 const transformDataFromDb = (dataFromDb: initSqlJs.QueryExecResult[]) => {
   const data: initSqlJs.QueryExecResult = dataFromDb[0]
-  console.log(data)
 
   const transformedData: any[] = []
 
@@ -187,13 +186,13 @@ main {
 }
 
 .scrollable-container {
-  height: calc(100% - 360px);
+  height: calc(100vh - 300px);
 }
 
 /* XS */
 @media (min-width: 320px) and (max-width: 575px) {
   .scrollable-container {
-    height: calc(60vh - 170px);
+    height: calc(60vh - 200px);
   }
 }
 </style>
