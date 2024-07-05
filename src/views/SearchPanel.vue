@@ -187,7 +187,7 @@ main {
 }
 
 .scrollable-container {
-  height: calc(100% - 300px);
+  height: calc(100% - 330px);
 }
 
 /* XS */
