@@ -8,6 +8,8 @@ import { marked } from 'marked'
 import SpinningLoader from './SpinningLoader.vue'
 import SearchPanel from './SearchPanel.vue'
 
+import { Levels, Topics } from '@/enum/Enum'
+
 import type { IQuestion } from '@/interfaces/IData'
 
 const store = useStore()
@@ -24,14 +26,46 @@ const question: Ref<IQuestion | null> = ref<IQuestion | null>(null)
 const onQuestionViewChanged = (questionView: IQuestion | null) => {
   question.value = questionView
 }
+
+const getLevelText = (level: Levels): string => {
+  switch (level) {
+    case Levels.Beginner:
+      return 'начинающий'
+    case Levels.Intermediate:
+      return 'средний'
+    case Levels.Advanced:
+      return 'продвинутый'
+    default:
+      return 'неизвестно'
+  }
+}
+
+const getTopicsText = (topic: Topics): string => {
+  switch (topic) {
+    case Topics.html:
+      return 'HTML'
+    case Topics.css:
+      return 'CSS'
+    case Topics.javascript:
+      return 'JavaScript'
+    case Topics.typescript:
+      return 'TypeScript'
+    case Topics.vue:
+      return 'Vue'
+    case Topics.browser:
+      return 'Браузер'
+    default:
+      return 'неизвестно'
+  }
+}
 </script>
 
 <template>
   <main class="d-flex flex-column">
     <SpinningLoader v-if="isLoading" />
     <div class="mx-7 d-flex justify-content-between align-items-center">
-      <h1 class="text-danger company-title">База знаний по фронтенду</h1>
-      <p>Режим использования</p>
+      <h1 class="text-danger company-title mr-1">База знаний по фронтенду</h1>
+      <p class="ml-1">Режим использования</p>
     </div>
     <div class="search-view-container">
       <div class="search-panel">
@@ -42,8 +76,8 @@ const onQuestionViewChanged = (questionView: IQuestion | null) => {
           <h2>{{ question.question }}</h2>
           <p v-html="marked.parse(question.answer)"></p>
           <hr />
-          <p><b>Тема: </b>{{ question.topic }}</p>
-          <p><b>Уровень: </b>{{ question.level }}</p>
+          <p><b>Тема: </b>{{ getTopicsText(question.topic) }}</p>
+          <p><b>Уровень: </b>{{ getLevelText(question.level) }}</p>
         </div>
         <p v-else class="mt-7">Выберите вопрос, чтобы посмотреть ответ на него.</p>
       </div>
@@ -87,6 +121,10 @@ main {
 .search-view-container {
   display: flex;
   flex-grow: 1;
+}
+
+hr {
+  border: 2px solid gray;
 }
 
 /* XS */
