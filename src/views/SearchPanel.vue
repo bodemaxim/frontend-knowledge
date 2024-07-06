@@ -85,7 +85,8 @@ const transformDataFromDb = (dataFromDb: initSqlJs.QueryExecResult[]) => {
 const onSearch = async () => {
   if (searchQuery.value.length === 0) {
     emits('questionView', null)
-    searchResults.value = []
+    searchResults.value = JSON.parse(JSON.stringify(dataToSearch.value))
+
     return
   }
 
@@ -102,13 +103,13 @@ const parseSearchQuery = (str: string): number[] => {
   const result: number[] = []
 
   const containsSubstring = (mainString: string, subString: string): boolean => {
-    return mainString.includes(subString)
+    return mainString.toLowerCase().includes(subString.toLowerCase())
   }
 
   for (const item of dataToSearch.value) {
     if (containsSubstring(item.question, query)) result.push(item.id)
   }
-  console.log(result)
+
   return result
 }
 

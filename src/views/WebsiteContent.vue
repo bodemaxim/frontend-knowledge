@@ -72,7 +72,7 @@ const getTopicsText = (topic: Topics): string => {
         <SearchPanel @question-view="onQuestionViewChanged($event)" />
       </div>
       <div class="view-panel">
-        <div v-if="question">
+        <div v-if="question" class="view-panel-question">
           <h2>{{ question.question }}</h2>
           <p v-html="marked.parse(question.answer)"></p>
           <hr />
@@ -111,7 +111,11 @@ main {
 
 .view-panel {
   margin-right: 2em;
-  overflow-x: auto;
+}
+
+.view-panel-question {
+  height: calc(100vh - 140px);
+  overflow-y: auto;
 }
 
 .search-panel {
@@ -130,7 +134,7 @@ hr {
 /* XS */
 @media (min-width: 320px) and (max-width: 575px) {
   main {
-    font-size: 12px;
+    font-size: 14px;
     overflow-y: auto;
   }
 
@@ -150,12 +154,16 @@ hr {
   .view-panel {
     margin: 1em;
   }
+
+  .view-panel-question {
+    height: auto;
+  }
 }
 
 /* S */
 @media (min-width: 576px) and (max-width: 767px) {
   main {
-    font-size: 13px;
+    font-size: 15px;
   }
 }
 </style>
