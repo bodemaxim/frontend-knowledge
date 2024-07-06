@@ -6,6 +6,7 @@ import { store } from '@/store/store'
 import initDb from '@/db/InitDb'
 
 import type { IQuestion } from '@/interfaces/IData'
+import { Topics, Levels } from '@/enum/Enum'
 
 //#region Props и Emits
 const emits = defineEmits<{
@@ -38,6 +39,16 @@ const searchQuery: Ref<string> = ref<string>('')
  * Результаты поиска.
  */
 const searchResults: Ref<IQuestion[]> = ref<IQuestion[]>([])
+
+/**
+ * Отображаемая строка установленного значения фильтра "Тема"
+ */
+const topicFilterValue: Ref<string> = ref<string>('Все')
+
+/**
+ * Отображаемая строка установленного значения фильтра "Тема"
+ */
+const levelFilterValue: Ref<string> = ref<string>('Все')
 //#endregion Данные
 
 //#region Методы
@@ -119,6 +130,66 @@ const parseSearchQuery = (str: string): number[] => {
 const viewAnswer = (question: IQuestion) => {
   emits('questionView', question)
 }
+
+/**
+ * Сортировать по теме.
+ */
+const sortByTopic = (topic: Topics) => {
+  switch (topic) {
+    case Topics.html:
+      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.html)
+      topicFilterValue.value = 'HTML'
+      break
+    case Topics.css:
+      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.css)
+      topicFilterValue.value = 'CSS'
+      break
+    case Topics.javascript:
+      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.javascript)
+      topicFilterValue.value = 'JavaScript'
+      break
+    case Topics.typescript:
+      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.typescript)
+      topicFilterValue.value = 'TypeScript'
+      break
+    case Topics.vue:
+      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.vue)
+      topicFilterValue.value = 'Vue'
+      break
+    case Topics.browser:
+      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.browser)
+      topicFilterValue.value = 'Браузер'
+      break
+    case Topics.all:
+      searchResults.value = JSON.parse(JSON.stringify(dataToSearch.value))
+      topicFilterValue.value = 'Все'
+      break
+  }
+}
+
+/**
+ * Сортировать по теме.
+ */
+const sortByLevel = (level: Levels) => {
+  switch (level) {
+    case Levels.beginner:
+      searchResults.value = dataToSearch.value.filter((item) => item.level === Levels.beginner)
+      levelFilterValue.value = 'джун'
+      break
+    case Levels.intermediate:
+      searchResults.value = dataToSearch.value.filter((item) => item.level === Levels.intermediate)
+      levelFilterValue.value = 'мидл'
+      break
+    case Levels.advanced:
+      searchResults.value = dataToSearch.value.filter((item) => item.level === Levels.advanced)
+      levelFilterValue.value = 'про'
+      break
+    case Levels.all:
+      searchResults.value = JSON.parse(JSON.stringify(dataToSearch.value))
+      levelFilterValue.value = 'все'
+      break
+  }
+}
 //#endregion Методы
 
 watch(
@@ -133,7 +204,42 @@ initData()
 
 <template>
   <main class="mt-5">
-    <p><b>Поиск вопросов</b></p>
+    <div class="d-flex flex-row align-items-start">
+      <div class="dropdown">
+        <button
+          class="btn btn-primary dropdown-toggle filter-btn"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          Тема: <sup>{{ topicFilterValue }}</sup>
+        </button>
+        <ul class="dropdown-menu">
+          <li @click="sortByTopic(Topics.all)" class="dropdown-item">Все</li>
+          <li @click="sortByTopic(Topics.html)" class="dropdown-item">HTML</li>
+          <li @click="sortByTopic(Topics.css)" class="dropdown-item">CSS</li>
+          <li @click="sortByTopic(Topics.javascript)" class="dropdown-item">JavaScript</li>
+          <li @click="sortByTopic(Topics.typescript)" class="dropdown-item">TypeScript</li>
+          <li @click="sortByTopic(Topics.vue)" class="dropdown-item">Vue</li>
+          <li @click="sortByTopic(Topics.browser)" class="dropdown-item">Браузер</li>
+        </ul>
+      </div>
+
+      <div class="dropdown ml-5">
+        <button
+          class="btn btn-primary dropdown-toggle filter-btn"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          Уровень <sup>{{ levelFilterValue }}</sup>
+        </button>
+        <ul class="dropdown-menu">
+          <li @click="sortByLevel(Levels.beginner)" class="dropdown-item">джун</li>
+          <li @click="sortByLevel(Levels.intermediate)" class="dropdown-item">мидл</li>
+          <li @click="sortByLevel(Levels.advanced)" class="dropdown-item">про</li>
+        </ul>
+      </div>
+    </div>
+
     <form>
       <div class="input-group mb-3 p-2">
         <input
@@ -145,7 +251,6 @@ initData()
       </div>
     </form>
 
-    <p class="mt-5"><b>Результаты</b></p>
     <v-virtual-scroll
       class="scrollable-container"
       :items="searchResults"
@@ -187,13 +292,17 @@ main {
 }
 
 .scrollable-container {
-  height: calc(100vh - 300px);
+  height: calc(100vh - 250px);
+}
+
+.filter-btn {
+  width: 150px;
 }
 
 /* XS */
 @media (min-width: 320px) and (max-width: 575px) {
   .scrollable-container {
-    height: calc(60vh - 200px);
+    height: calc(60vh - 150px);
   }
 }
 </style>

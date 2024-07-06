@@ -29,11 +29,11 @@ const onQuestionViewChanged = (questionView: IQuestion | null) => {
 
 const getLevelText = (level: Levels): string => {
   switch (level) {
-    case Levels.Beginner:
+    case Levels.beginner:
       return 'начинающий'
-    case Levels.Intermediate:
+    case Levels.intermediate:
       return 'средний'
-    case Levels.Advanced:
+    case Levels.advanced:
       return 'продвинутый'
     default:
       return 'неизвестно'
