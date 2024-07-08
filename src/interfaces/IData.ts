@@ -5,7 +5,6 @@ export interface IQuestion {
   question: string
   answer: string
   topic: Topics
-  keywords: string
   links: string
   level: Levels
 }

@@ -79,9 +79,8 @@ const transformDataFromDb = (dataFromDb: initSqlJs.QueryExecResult[]) => {
       question: item[1],
       answer: item[2],
       topic: item[3],
-      keywords: item[4],
-      links: item[5],
-      level: item[6]
+      links: item[4],
+      level: item[5]
     }
 
     transformedData.push(newItem)
