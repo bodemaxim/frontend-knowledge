@@ -1,4 +1,4 @@
-import { Levels, Topics } from '@/enum/Enum'
+import { Levels, Topics, Ready } from '@/enum/Enum'
 
 export interface IQuestion {
   id: number
@@ -7,4 +7,5 @@ export interface IQuestion {
   topic: Topics
   links: string
   level: Levels
+  isReady: Ready
 }

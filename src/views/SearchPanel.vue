@@ -6,7 +6,8 @@ import { store } from '@/store/store'
 import initDb from '@/db/InitDb'
 
 import type { IQuestion } from '@/interfaces/IData'
-import { Topics, Levels } from '@/enum/Enum'
+import type { IFilter } from '@/interfaces/IFilter'
+import { Topics, Levels, Ready } from '@/enum/Enum'
 
 //#region Props и Emits
 const emits = defineEmits<{
@@ -41,14 +42,28 @@ const searchQuery: Ref<string> = ref<string>('')
 const searchResults: Ref<IQuestion[]> = ref<IQuestion[]>([])
 
 /**
- * Отображаемая строка установленного значения фильтра "Тема"
+ * Текущие значения фильтра.
  */
-const topicFilterValue: Ref<string> = ref<string>('Все')
+let filter: IFilter = {
+  topic: Topics.all,
+  level: Levels.all,
+  ready: Ready.true
+}
 
 /**
  * Отображаемая строка установленного значения фильтра "Тема"
  */
-const levelFilterValue: Ref<string> = ref<string>('Все')
+const topicFilterValue: Ref<string> = ref<string>('все')
+
+/**
+ * Отображаемая строка установленного значения фильтра "Тема"
+ */
+const levelFilterValue: Ref<string> = ref<string>('все')
+
+/**
+ * Отображаемая строка установленного значения фильтра "Готовность"
+ */
+const readyFilterValue: Ref<string> = ref<string>('да')
 //#endregion Данные
 
 //#region Методы
@@ -73,6 +88,7 @@ const transformDataFromDb = (dataFromDb: initSqlJs.QueryExecResult[]) => {
 
   const transformedData: any[] = []
 
+  //добавить проверку на пустую строку, нули в данных трансформировать в нужное
   for (const item of data.values) {
     const newItem = {
       id: item[0],
@@ -80,13 +96,15 @@ const transformDataFromDb = (dataFromDb: initSqlJs.QueryExecResult[]) => {
       answer: item[2],
       topic: item[3],
       links: item[4],
-      level: item[5]
+      level: item[5],
+      isReady: item[6] === 1 ? Ready.true : Ready.false
     }
 
     transformedData.push(newItem)
   }
   dataToSearch.value = JSON.parse(JSON.stringify(transformedData))
   searchResults.value = JSON.parse(JSON.stringify(transformedData))
+  console.log(dataToSearch.value)
 }
 
 /**
@@ -129,6 +147,35 @@ const parseSearchQuery = (str: string): number[] => {
 const viewAnswer = (question: IQuestion) => {
   emits('questionView', question)
 }
+//#endregion Методы
+
+//#region Фильтр
+
+/**
+ * Фильтровать данные.
+ */
+const setFilter = () => {
+  console.log('setFilter filter', filter)
+
+  let data: IQuestion[] = []
+
+  if (filter.topic === Topics.all) {
+    data = [...dataToSearch.value]
+    console.log('1', data)
+  } else {
+    data = dataToSearch.value.filter((item) => item.topic === filter.topic)
+    console.log('1.1')
+  }
+
+  if (filter.level !== Levels.all) data = data.filter((item) => item.level === filter.level)
+  console.log('2', data)
+
+  if (filter.ready !== Ready.all) data = data.filter((item) => item.isReady === filter.ready)
+  console.log('3', data)
+
+  searchResults.value = [...data]
+  console.log(searchResults.value.length)
+}
 
 /**
  * Сортировать по теме.
@@ -136,31 +183,38 @@ const viewAnswer = (question: IQuestion) => {
 const sortByTopic = (topic: Topics) => {
   switch (topic) {
     case Topics.html:
-      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.html)
+      filter.topic = Topics.html
+      setFilter()
       topicFilterValue.value = 'HTML'
       break
     case Topics.css:
-      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.css)
+      filter.topic = Topics.css
+      setFilter()
       topicFilterValue.value = 'CSS'
       break
     case Topics.javascript:
-      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.javascript)
+      filter.topic = Topics.javascript
+      setFilter()
       topicFilterValue.value = 'JavaScript'
       break
     case Topics.typescript:
-      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.typescript)
+      filter.topic = Topics.typescript
+      setFilter()
       topicFilterValue.value = 'TypeScript'
       break
     case Topics.vue:
-      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.vue)
+      filter.topic = Topics.vue
+      setFilter()
       topicFilterValue.value = 'Vue'
       break
     case Topics.browser:
-      searchResults.value = dataToSearch.value.filter((item) => item.topic === Topics.browser)
+      filter.topic = Topics.browser
+      setFilter()
       topicFilterValue.value = 'Браузер'
       break
     case Topics.all:
-      searchResults.value = JSON.parse(JSON.stringify(dataToSearch.value))
+      filter.topic = Topics.all
+      setFilter()
       topicFilterValue.value = 'Все'
       break
   }
@@ -172,24 +226,51 @@ const sortByTopic = (topic: Topics) => {
 const sortByLevel = (level: Levels) => {
   switch (level) {
     case Levels.beginner:
-      searchResults.value = dataToSearch.value.filter((item) => item.level === Levels.beginner)
+      filter.level = Levels.beginner
+      setFilter()
       levelFilterValue.value = 'джун'
       break
     case Levels.intermediate:
-      searchResults.value = dataToSearch.value.filter((item) => item.level === Levels.intermediate)
+      filter.level = Levels.intermediate
+      setFilter()
       levelFilterValue.value = 'мидл'
       break
     case Levels.advanced:
-      searchResults.value = dataToSearch.value.filter((item) => item.level === Levels.advanced)
+      filter.level = Levels.advanced
+      setFilter()
       levelFilterValue.value = 'про'
       break
     case Levels.all:
-      searchResults.value = JSON.parse(JSON.stringify(dataToSearch.value))
+      filter.level = Levels.all
+      setFilter()
       levelFilterValue.value = 'все'
       break
   }
 }
-//#endregion Методы
+
+/**
+ * Сортировать по готовности.
+ */
+const sortByReady = (ready: Ready) => {
+  switch (ready) {
+    case Ready.true:
+      filter.ready = Ready.true
+      setFilter()
+      readyFilterValue.value = 'да'
+      break
+    case Ready.false:
+      filter.ready = Ready.false
+      setFilter()
+      readyFilterValue.value = 'нет'
+      break
+    case Ready.all:
+      filter.ready = Ready.all
+      setFilter()
+      readyFilterValue.value = 'все'
+      break
+  }
+}
+//#endregion Фильтр
 
 watch(
   () => searchQuery.value,
@@ -235,6 +316,22 @@ initData()
           <li @click="sortByLevel(Levels.beginner)" class="dropdown-item">джун</li>
           <li @click="sortByLevel(Levels.intermediate)" class="dropdown-item">мидл</li>
           <li @click="sortByLevel(Levels.advanced)" class="dropdown-item">про</li>
+          <li @click="sortByLevel(Levels.all)" class="dropdown-item">все</li>
+        </ul>
+      </div>
+
+      <div class="dropdown ml-5">
+        <button
+          class="btn btn-primary dropdown-toggle filter-btn"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          Готовность <sup>{{ readyFilterValue }}</sup>
+        </button>
+        <ul class="dropdown-menu">
+          <li @click="sortByReady(Ready.true)" class="dropdown-item">да</li>
+          <li @click="sortByReady(Ready.false)" class="dropdown-item">нет</li>
+          <li @click="sortByReady(Ready.all)" class="dropdown-item">все</li>
         </ul>
       </div>
     </div>

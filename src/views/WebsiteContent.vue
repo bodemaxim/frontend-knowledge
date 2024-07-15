@@ -105,8 +105,8 @@ main {
 }
 
 .search-panel {
-  width: 30%;
-  max-width: 30%;
+  width: 40%;
+  max-width: 40%;
 }
 
 .view-panel {

@@ -14,3 +14,9 @@ export enum Topics {
   browser = 6,
   all = 7
 }
+
+export enum Ready {
+  false = 0,
+  true = 1,
+  all = 2
+}
