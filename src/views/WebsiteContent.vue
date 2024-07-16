@@ -87,7 +87,7 @@ const getTopicsText = (topic: Topics): string => {
           <p><b>Уровень: </b>{{ getLevelText(question.level) }}</p>
           <ul>
             <li v-for="item in question.links" :key="item">
-              <a :href="item" target="blank">{{ item }}</a>
+              <a :href="item" target="blank" class="link">{{ item }}</a>
             </li>
           </ul>
         </div>
@@ -141,6 +141,14 @@ main {
 
 hr {
   border: 2px solid gray;
+}
+
+.link {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
 }
 
 /* XS */
