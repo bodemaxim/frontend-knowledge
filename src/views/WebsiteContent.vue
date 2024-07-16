@@ -10,7 +10,7 @@ import SearchPanel from './SearchPanel.vue'
 
 import { Levels, Topics } from '@/enum/Enum'
 
-import type { IQuestion } from '@/interfaces/IData'
+import type { IQuestion, ILink } from '@/interfaces/IData'
 
 const store = useStore()
 const isLoading = computed(() => store.getters.isLoading)
@@ -21,6 +21,11 @@ const isLoading = computed(() => store.getters.isLoading)
 const question: Ref<IQuestion | null> = ref<IQuestion | null>(null)
 
 /**
+ * Ссылки на ресурсы.
+ */
+const links: Ref<ILink[]> = ref<ILink[]>([])
+
+/**
  * Событие изменения вопроса для отображения.
  */
 const onQuestionViewChanged = (questionView: IQuestion | null) => {
@@ -28,6 +33,8 @@ const onQuestionViewChanged = (questionView: IQuestion | null) => {
 }
 
 const getLevelText = (level: Levels): string => {
+  console.log(question.value ? question.value.links : 'нет')
+
   switch (level) {
     case Levels.beginner:
       return 'начинающий'
@@ -78,6 +85,11 @@ const getTopicsText = (topic: Topics): string => {
           <hr />
           <p><b>Тема: </b>{{ getTopicsText(question.topic) }}</p>
           <p><b>Уровень: </b>{{ getLevelText(question.level) }}</p>
+          <ul>
+            <li v-for="item in question.links" :key="item">
+              <a :href="item" target="blank">{{ item }}</a>
+            </li>
+          </ul>
         </div>
         <p v-else class="mt-7">Выберите вопрос, чтобы посмотреть ответ на него.</p>
       </div>

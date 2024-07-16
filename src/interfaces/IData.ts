@@ -9,3 +9,8 @@ export interface IQuestion {
   level: Levels
   isReady: Ready
 }
+
+export interface ILink {
+  id: number
+  link: string
+}

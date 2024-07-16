@@ -90,13 +90,19 @@ const transformDataFromDb = (dataFromDb: initSqlJs.QueryExecResult[]) => {
 
   //добавить проверку на пустую строку, нули в данных трансформировать в нужное
   for (const item of data.values) {
+    const linksStr: any = item[4]
+    const links: string[] = linksStr.split(' ').filter(Boolean)
+
+    console.log(links)
+
+    console.log(links)
     const newItem = {
       id: item[0],
       question: item[1],
-      answer: item[2],
-      topic: item[3],
-      links: item[4],
-      level: item[5],
+      answer: item[2] ? item[2] : '',
+      topic: item[3] ? item[3] : 7,
+      links: item[4] ? links : [],
+      level: item[5] ? item[5] : 4,
       isReady: item[6] === 1 ? Ready.true : Ready.false
     }
 
