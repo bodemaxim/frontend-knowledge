@@ -287,11 +287,12 @@ initData()
     <div class="d-flex flex-row align-items-start">
       <div class="dropdown">
         <button
-          class="btn btn-primary dropdown-toggle filter-btn"
+          class="btn btn-primary dropdown-toggle filter-btn-1"
           type="button"
           data-bs-toggle="dropdown"
         >
-          Тема: <sup>{{ topicFilterValue }}</sup>
+          <img src="/images/icon-topics.svg" alt="Тема" width="24" height="24" class="mt-1 mb-1" />
+          <p class="d-inline ml-2">{{ topicFilterValue }}</p>
         </button>
         <ul class="dropdown-menu">
           <li @click="sortByTopic(Topics.all)" class="dropdown-item">Все</li>
@@ -306,11 +307,18 @@ initData()
 
       <div class="dropdown ml-5">
         <button
-          class="btn btn-primary dropdown-toggle filter-btn"
+          class="btn btn-primary dropdown-toggle filter-btn-2"
           type="button"
           data-bs-toggle="dropdown"
         >
-          Уровень <sup>{{ levelFilterValue }}</sup>
+          <img
+            src="/images/icon-levels.svg"
+            alt="Уровень"
+            width="24"
+            height="24"
+            class="mt-1 mb-1"
+          />
+          <p class="d-inline ml-2">{{ levelFilterValue }}</p>
         </button>
         <ul class="dropdown-menu">
           <li @click="sortByLevel(Levels.beginner)" class="dropdown-item">джун</li>
@@ -322,11 +330,18 @@ initData()
 
       <div class="dropdown ml-5">
         <button
-          class="btn btn-primary dropdown-toggle filter-btn"
+          class="btn btn-primary dropdown-toggle filter-btn-2"
           type="button"
           data-bs-toggle="dropdown"
         >
-          Готовность <sup>{{ readyFilterValue }}</sup>
+          <img
+            src="/images/icon-ready.svg"
+            alt="Готовность"
+            width="24"
+            height="24"
+            class="mt-1 mb-1"
+          />
+          <p class="d-inline ml-2">{{ readyFilterValue }}</p>
         </button>
         <ul class="dropdown-menu">
           <li @click="sortByReady(Ready.true)" class="dropdown-item">да</li>
@@ -391,14 +406,26 @@ main {
   height: calc(100vh - 250px);
 }
 
-.filter-btn {
+.filter-btn-1 {
   width: 150px;
+  overflow: hidden;
+}
+
+.filter-btn-2 {
+  width: 110px;
+  overflow: hidden;
 }
 
 /* XS */
 @media (min-width: 320px) and (max-width: 575px) {
   .scrollable-container {
     height: calc(60vh - 150px);
+  }
+
+  .filter-btn-1,
+  .filter-btn-2 {
+    width: 90px;
+    overflow: hidden;
   }
 }
 </style>
