@@ -47,7 +47,7 @@ const searchResults: Ref<IQuestion[]> = ref<IQuestion[]>([])
 let filter: IFilter = {
   topic: Topics.all,
   level: Levels.all,
-  ready: Ready.true
+  ready: Ready.all
 }
 
 /**
@@ -63,7 +63,7 @@ const levelFilterValue: Ref<string> = ref<string>('все')
 /**
  * Отображаемая строка установленного значения фильтра "Готовность"
  */
-const readyFilterValue: Ref<string> = ref<string>('да')
+const readyFilterValue: Ref<string> = ref<string>('все')
 //#endregion Данные
 
 //#region Методы
